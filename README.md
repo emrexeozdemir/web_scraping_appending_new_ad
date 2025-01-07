@@ -1,86 +1,113 @@
-# Web Scraping New Ads for arabam.com
+# Web Scraper with PyQt5 GUI
 
-This project uses Selenium to scrape advertisements for used cars from [arabam.com](https://www.arabam.com). The script is designed to check for new ads and append them to an existing CSV file while avoiding duplicates. This ensures that only fresh data is collected without reprocessing already scraped ads.
+This project is a Python-based web scraper with a graphical user interface (GUI) built using PyQt5. It scrapes automobile listings from a specific website, checks for new data, and appends only new entries to an existing CSV file.
 
 ## Features
 
-- Scrapes car advertisements from arabam.com.
-- Identifies and appends only new ads to the existing dataset.
-- Efficiently handles pagination and retries for network errors or page timeouts.
-- Extracts detailed ad information, such as:
-  - Advertisement ID
-  - Date
-  - Location
-  - Brand, Series, and Model
-  - Year, Mileage, Transmission, and Fuel Type
-  - Seller details and price
+- **User-Friendly GUI:**
+  - Start and stop scraping with buttons.
+  - Display real-time logs in the GUI.
+  - Show scraping status.
 
-## Prerequisites
+- **Data Handling:**
+  - Reads existing data from a CSV file.
+  - Scrapes listing details from a target website.
+  - Appends only new data to the CSV file, avoiding duplicates.
 
-- Python 3.x
+- **Selenium Integration:**
+  - Uses Selenium WebDriver for dynamic web scraping.
+  - Includes robust error handling and retries for missing elements.
+
+## Requirements
+
+- Python 3.8 or later
 - Google Chrome browser
-- ChromeDriver (compatible with your Chrome version)
-- Required Python packages:
-  - `selenium`
-  - `pandas`
-  - `datetime`
+- [ChromeDriver](https://sites.google.com/chromium.org/driver/) (compatible with your Chrome version)
 
-Install the required packages using pip:
+### Python Libraries
+
+Install the required libraries using pip:
 ```bash
-pip install selenium pandas
+pip install PyQt5 selenium pandas
 ```
 
 ## How It Works
 
 1. **Initialization:**
-   - The script reads existing data from a CSV file (`test.csv`) into a Pandas DataFrame (`df_existent`).
-   - Sets up Selenium WebDriver in headless mode for efficient scraping.
+   - Reads existing data from `test.csv`.
+   - Sets up a mapping between website data fields and CSV columns.
 
-2. **Fetching Advertisements:**
-   - Navigates to the arabam.com listing page for used cars.
-   - Iterates through multiple pages (up to a maximum of 49 pages) and fetches car ad links.
+2. **Scraping:**
+   - Navigates through multiple pages of listings.
+   - Opens each listing and extracts details such as ad ID, price, location, seller information, and more.
 
-3. **Processing Individual Ads:**
-   - For each ad, the script opens its page, extracts detailed information, and maps it to predefined columns.
-   - Checks if the `ad_Id` already exists in the existing dataset.
-   - If the ad is new, appends its data to the CSV file; otherwise, skips it.
+3. **Data Processing:**
+   - Checks for duplicates using the `ad_Id` field.
+   - Appends new data to `test.csv`.
 
-4. **Error Handling:**
-   - Implements retry logic to handle network timeouts or missing elements.
-   - Skips ads or pages that cannot be processed after several attempts.
-
-5. **Output:**
-   - A CSV file (`test.csv`) that contains all the scraped data, including new ads.
-
-## Key Functions
-
-- `wait_for_element_or_refresh(driver, timeout, locator)`:
-  Ensures the presence of required elements on the page by retrying after refreshing the page.
-
-- **Mapping of ad details:**
-  The script uses a dictionary (`key_to_column`) to map ad properties (e.g., "İlan No") to specific column names (e.g., `ad_Id`).
+4. **GUI Interaction:**
+   - Provides start/stop buttons for scraping.
+   - Displays logs and status updates in real time.
 
 ## Usage
 
-1. Ensure that `chromedriver.exe` is in the same directory as the script or update the path in the `Service` initialization.
-2. Place the existing dataset (`test.csv`) in the script directory or update the `csv_file_path` variable.
-3. Run the script:
+1. **Run the Program:**
    ```bash
-   python append_new_car.py
+   python scraper_app.py
    ```
-4. The script will append new ads to the CSV file while avoiding duplicates.
+
+2. **Start Scraping:**
+   - Click the "Start Scraping" button.
+
+3. **Stop Scraping:**
+   - Click the "Stop Scraping" button at any time.
+
+4. **View Logs:**
+   - Monitor progress in the "Log Output" section of the GUI.
+
+## CSV File Structure
+
+The scraper outputs data to `test.csv` with the following columns:
+
+| Column Name            | Description                     |
+|------------------------|---------------------------------|
+| ad_Id                 | Unique ID for the ad           |
+| ad_date               | Date of the ad                 |
+| ad_loc1               | Primary location               |
+| ad_loc2               | Secondary location             |
+| brand                 | Vehicle brand                  |
+| series                | Vehicle series                 |
+| model                 | Vehicle model                  |
+| year                  | Year of manufacture            |
+| mileage               | Mileage of the vehicle         |
+| transmission          | Transmission type              |
+| fuel_type             | Type of fuel                   |
+| body_type             | Body type of the vehicle       |
+| color                 | Vehicle color                  |
+| engine_capacity       | Engine capacity                |
+| engine_power          | Engine power                   |
+| drive_type            | Drive type (e.g., FWD, AWD)    |
+| vehicle_condition     | Condition of the vehicle       |
+| fuel_consumption      | Fuel consumption rate          |
+| fuel_tank             | Fuel tank capacity             |
+| paint/replacement     | Paint/replacement status       |
+| trade_in              | Trade-in option                |
+| seller_type           | Type of seller (e.g., dealer)  |
+| seller_name           | Seller's name                  |
+| ad_price              | Price of the listing           |
+| ad_url                | URL of the ad                  |
 
 ## Notes
 
-- The script limits duplicate checks to `ad_Id`. Ensure that the existing dataset has this column populated correctly.
-- For testing or debugging, you can disable headless mode by removing the `--headless` argument from `ChromeOptions`.
-- Adjust page limits or retry counts as needed based on your requirements or system constraints.
+- Ensure `chromedriver.exe` is in the project directory or accessible via PATH.
+- The scraper retries up to 3 times for missing elements before skipping.
+- Modify `csv_file_path` in the code if you want to use a different file name or location.
 
 ## Limitations
 
-- The script assumes a maximum of 49 pages. Modify the range as needed for larger datasets.
-- arabam.com layout or structure changes may require updates to the CSS selectors or XPath expressions.
+- Hardcoded for a specific website.
+- Requires adjustments for other websites with different structures.
 
-## Disclaimer
+## License
 
-This script is intended for educational and personal use only. Please ensure compliance with arabam.com's terms of service before using it for scraping.
+This project is licensed under the MIT License. See the LICENSE file for details.
