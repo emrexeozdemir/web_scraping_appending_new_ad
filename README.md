@@ -53,7 +53,7 @@ pip install PyQt5 selenium pandas
 
 1. **Run the Program:**
    ```bash
-   python scraper_app.py
+   python append_new_car_last.py
    ```
 
 2. **Start Scraping:**
